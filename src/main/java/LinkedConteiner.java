@@ -1,4 +1,6 @@
-public class LinkedConteiner<E> implements Linked<E> {
+import java.util.Iterator;
+
+public class LinkedConteiner<E> implements Linked<E>, Iterable<E>, descendingIterator<E> {
     E item;
     Node<E> frstNode;
     Node<E> lastNode;
@@ -14,7 +16,7 @@ public class LinkedConteiner<E> implements Linked<E> {
     public void addLast(E e) {
         Node<E> perv = lastNode;
         perv.setCurrentElement(e);
-        lastNode = new Node<>(null,perv, null);
+        lastNode = new Node<>(null, perv, null);
         perv.setNextElement(lastNode);
         size++;
     }
@@ -23,7 +25,7 @@ public class LinkedConteiner<E> implements Linked<E> {
     public void addFrst(E e) {
         Node<E> perv = frstNode;
         perv.setCurrentElement(e);
-        frstNode = new Node<>(null,null, perv);
+        frstNode = new Node<>(null, null, perv);
         perv.setNextElement(frstNode);
 
 
@@ -41,9 +43,45 @@ public class LinkedConteiner<E> implements Linked<E> {
             element = getNextElement(element);
         return element.getCurrentElement();
     }
-  private Node<E>getNextElement(Node<E> current){
+
+    private Node<E> getNextElement(Node<E> current) {
         return current.getNextElement();
-  }
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+
+        return new Iterator<E>() {
+            int counter = 0;
+
+            @Override
+            public boolean hasNext() {
+                return counter < size;
+            }
+
+            @Override
+            public E next() {
+                return getElementByIndex(counter++);
+            }
+        };
+    }
+
+    @Override
+    public Iterator<E> descendingIterator() {
+        return new Iterator<E>() {
+            int counter = size - 1;
+
+            @Override
+            public boolean hasNext() {
+               return counter >= 0;
+            }
+
+            @Override
+            public E next() {
+                return getElementByIndex(counter--);
+            }
+        };
+    }
 
     private static class Node<E> {
         E currentElement;
